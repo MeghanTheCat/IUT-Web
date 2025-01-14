@@ -12,7 +12,7 @@ class SaveController extends Controller
     public function saveCity($city)
     {
         UserCity::firstOrCreate(
-            ['user_id' => auth()->id(), 'city' => $city]
+            ['user_id' => auth()->id(), 'city' => $city, 'notification_enable' => false]
         );
         return redirect()->route("weather");
     }
