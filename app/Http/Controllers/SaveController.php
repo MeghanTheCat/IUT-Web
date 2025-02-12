@@ -22,4 +22,46 @@ class SaveController extends Controller
         $query->delete();
         return redirect()->route('weather');
     }
+
+    public function addNotification($city) {
+        $cities = UserCity::all();
+        $notifCity = null;
+        foreach ($cities as $value) {
+            if ($value->user_id == auth()->id() && $value->city == $city) {
+                $notifCity = $value;
+            }
+        }
+        $notifCity->notification_enable = true;
+        $notifCity->save();
+        SaveController::shareNotification();
+        return redirect()->route('weather');
+
+    }
+
+    public function removeNotification($city) {
+        $cities = UserCity::all();
+        foreach ($cities as $value) {
+            if ($value->user_id == auth()->id() && $value->city == $city) {
+                $notifCity = $value;
+            }
+        }
+        $notifCity->notification_enable = false;
+        $notifCity->save();
+        SaveController::shareNotification();
+        return redirect()->route('weather');
+    }
+
+    public static function shareNotification()
+    {
+        if (auth()->check()) {
+            $notifsCities = [];
+            $cities = UserCity::all();
+            foreach ($cities as $value) {
+                if ($value->user_id == auth()->id() && $value->notification_enable) {
+                    $notifsCities[] = $value->city;
+                }
+            }
+            View::share("notification", $notifsCities);
+        }
+    }
 }

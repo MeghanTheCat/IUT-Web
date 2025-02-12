@@ -29,7 +29,6 @@
                         </x-nav-link>
                     @endif
                     @if (isset($savedCities))
-                    <!-- {{var_dump($savedCities)}} -->
                         @foreach ($savedCities as $query)
                             <x-nav-link :href="route('weather.weekly', ['city' => $query->city])" :active="request()->fullUrl() == route('weather.weekly', ['city' => $query->city])">
                                 {{$query->city}}
@@ -38,6 +37,30 @@
                                     @method('DELETE')
                                     <button type="submit" class="text-blue-500 hover:text-blue-700">&times;</button>
                                 </form>
+                                @php
+                                    $notifCities = [];
+                                    $cities = \App\Models\UserCity::all();
+                                    foreach ($cities as $city) {
+                                        if ($city->user_id == auth()->id() && $city->notification_enable) {
+                                            $notifCities[] = $city->city;
+                                        }
+                                    }
+                                @endphp
+                                @if (isset($notifCities) && in_array($query->city, $notifCities))
+                                    <form action="{{ route('notification.remove', ['city' => $query->city]) }}" method="POST">
+                                        @csrf
+                                        <button type="submit" class="back-button">
+                                            <p class="c-red">mail</p>
+                                        </button>
+                                    </form>
+                                @else
+                                    <form action="{{ route('notification.add', ['city' => $query->city]) }}" method="POST">
+                                        @csrf
+                                        <button type="submit" class="back-button">
+                                            <p class="c-green">mail</p>
+                                        </button>
+                                    </form>
+                                @endif
                             </x-nav-link>
                         @endforeach
                     @endif

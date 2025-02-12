@@ -157,3 +157,13 @@ button[type="submit"]:hover {
     font-weight: 600;
     margin-top: 1rem;
 }
+
+.c-green {
+    color: green;
+    fill: green;
+}
+
+.c-red {
+    color: red;
+    fill: red;
+}

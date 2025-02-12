@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Services\WeatherService;
 use App\Notifications\SendNotification;
+use App\Models\UserCity;
 
 class SendWeatherEmails extends Command
 {
@@ -18,19 +19,26 @@ class SendWeatherEmails extends Command
 
     public function handle()
     {
-        $users = User::whereNotNull('favorite_city')->get();
+        $users = User::all();
         foreach ($users as $user) {
             $city = $user->favorite;
             if ($city != null) {
                 $weatherService = new WeatherService();
                 $weatherData = $weatherService->getWeather($city);
 
-                $data = [
+                $favorite_data = [
                     'weatherData' => $weatherData
                 ];
-                $user->notify(new SendNotification($data));
-                $this->info("Successfully sent to {$user->email}");
             }
+            $cities = UserCity::all();
+            foreach ($cities as $city) {
+                if ($city->user_id == $user->id && $city->notification_enable) {
+                    $this->info("ville {$city->city} pour {$user->id}");
+                }
+            }
+            die();
+            $user->notify(new SendNotification($favorite_data ?? ''));
+            $this->info("Successfully sent to {$user->email}");
         }
     }
 

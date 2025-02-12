@@ -16,7 +16,7 @@ class SendNotification extends Notification
     /**
      * Create a new notification instance.
      */
-    public function __construct($data)
+    public function __construct($data, $user)
     {
         $this->data = $data;
     }
@@ -52,6 +52,11 @@ class SendNotification extends Notification
             ->lineIf($this->data['weatherData']['wind']['speed'], "• Wind: {$this->data['weatherData']['wind']['speed']} m/s")
             ->action('View Full Weather Report', url('/weather/' . $this->data['weatherData']['name']))
             ->line('Have a great day!');
+
+            $csvData = "CSV DATA";
+            if ($this->userCity !== null) {
+
+            }
     }
 
     /**

@@ -7,7 +7,6 @@
             <div class="weekly-forecast">
                 <a href="{{ route('weather.save', ['city' => $city]) }}" class="back-button">Save</a>
                 <a href="{{ route('favorite.add', ['city' => $city]) }}" class="back-button">Add to favorite</a>
-                <a href="{{ route(, ['city' => $city]) }}" class="back-button">Enable notification</a>
                 @foreach ($forecast as $day)
                     <div class="day-forecast" style="padding: 8vh 0 0 0">
                         <h2>{{ $day['date']->format('m/d/Y') }}</h2>
